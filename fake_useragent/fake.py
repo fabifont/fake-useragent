@@ -20,6 +20,7 @@ class FakeUserAgent(object):
         verify_ssl=True,
         safe_attrs=tuple(),
         num_newest_uas=settings.BROWSERS_COUNT_LIMIT,
+        old_versions=True,
     ):
         assert isinstance(cache, bool), \
             'cache must be True or False'
@@ -59,7 +60,7 @@ class FakeUserAgent(object):
                 'safe_attrs must be list\\tuple\\set of strings or unicode'
 
         self.safe_attrs = set(safe_attrs)
-        
+
         assert isinstance(num_newest_uas, int), \
             'num_newest_uas must be an integer'
 
@@ -67,6 +68,10 @@ class FakeUserAgent(object):
             'num_newest_uas must be greater than zero'
 
         self.num_newest_uas = min(num_newest_uas, settings.BROWSERS_COUNT_LIMIT)
+        assert isinstance(old_versions, bool), \
+            'old_versions must be True or False'
+
+        self.old_versions = old_versions
 
         # initial empty data
         self.data = {}
@@ -85,11 +90,13 @@ class FakeUserAgent(object):
                         self.path,
                         use_cache_server=self.use_cache_server,
                         verify_ssl=self.verify_ssl,
+                        old_versions=self.old_versions,
                     )
                 else:
                     self.data = load(
                         use_cache_server=self.use_cache_server,
                         verify_ssl=self.verify_ssl,
+                        old_versions=self.old_versions,
                     )
 
                 # TODO: change source file format
